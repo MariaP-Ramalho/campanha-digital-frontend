@@ -170,7 +170,7 @@ header img {
     color: white;
 }
 
-#newTagInput{
+#newTagInput {
     width: 50%;
 }
 
@@ -187,4 +187,128 @@ header img {
 
 .close:hover {
     color: black;
+}
+
+.tag-section {
+    margin-bottom: 30px;
+}
+
+.tag-section h3 {
+    color: white;
+    font-family: 'SF Pro Display';
+    background-color: #565656;
+    padding: 8px;
+    border-radius: 10px;
+    width: fit-content;
+}
+
+.live-scroll {
+    display: flex;
+    overflow-x: auto;
+    gap: 16px;
+    padding: 10px 0;
+
+    scrollbar-width: none;
+}
+
+.live-scroll:hover {
+    scrollbar-width: thin;
+    scrollbar-color: #363636 #121212;
+}
+
+.live-scroll::-webkit-scrollbar {
+    height: 10px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.live-scroll:hover::-webkit-scrollbar {
+    opacity: 1;
+}
+
+.live-scroll::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.live-scroll::-webkit-scrollbar-thumb {
+    background-color: #363636;
+    border-radius: 10px;
+    border: 2px solid #121212;
+}
+
+
+.live-card:hover {
+    transform: scale(1.04);
+}
+
+.live-card {
+    border-radius: 16px;
+    min-width: 320px;
+    max-width: 340px;
+    padding: 16px;
+    flex: 0 0 auto;
+    color: white;
+    font-family: 'SF Pro Display';
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.live-thumbnail {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.live-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.live-title {
+    font-weight: bold;
+    font-size: 18px;
+    color: white;
+    flex: 1;
+    margin-right: 10px;
+}
+
+.live-actions {
+    display: flex;
+    flex-direction: row;
+    gap: 6px;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+
+.live-actions button {
+    background: none;
+    border: none;
+    padding: 4px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+
+}
+
+.live-actions button:hover {
+    background-color: rgba(250, 180, 0, 0.1);
+    color: #ffcb00;
+}
+
+.live-actions svg {
+    width: 22px;
+    height: 22px;
+}
+
+.live-date {
+    font-size: 14px;
+    color: #ccc;
+    text-align: left;
 }
