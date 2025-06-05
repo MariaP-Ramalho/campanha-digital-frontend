@@ -151,6 +151,7 @@ body {
 }
 
 .entrar-cadastrar-container button{
+  cursor: pointer;
   width: 90%;
   height: 50%;
   border-radius: 16px;

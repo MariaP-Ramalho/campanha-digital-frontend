@@ -5,6 +5,14 @@
     font-style: normal;
 }
 
+@font-face {
+    font-family: 'SF Pro Display Bold';
+    src: url('../fonts/SFPRODISPLAYBOLD.OTF') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
 
 html,
 body {
@@ -91,19 +99,92 @@ header img {
 }
 
 .reports-new button {
-    height: 85%;
-    width: 15%;
+    cursor: pointer;
+    height: 75%;
+    width: 13%;
     border-radius: 12px;
     border: 0;
     background-color: #FFD500;
-    font-family: 'SF Pro Display';
-    font-weight:bolder;
+    font-family: 'SF Pro Display Bold';
+    font-weight: bolder;
 }
 
 
 .white-line {
-    height: 2px;
+    height: 1px;
     background-color: white;
     width: 100%;
     margin: 0;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: #FAB400;
+    margin: 10% auto;
+    padding: 20px;
+    width: 20%;
+    border-radius: 10px;
+    position: relative;
+}
+
+.modal-content label {
+    font-family: 'SF Pro Display';
+}
+
+.modal-content input {
+    width: 90%;
+    height: 40px;
+    border-radius: 12px;
+    font-size: 14px;
+    border: 0;
+}
+
+.modal-content select {
+    width: 40%;
+    height: 40px;
+    border: 0;
+    border-radius: 12px;
+    font-family: 'SF Pro Display';
+    font-size: 14px;
+}
+
+.modal-content button {
+    border: 0;
+    border-radius: 10px;
+    width: 40%;
+    height: 45px;
+    display: block;
+    margin: 20px auto 0 auto;
+    font-family: 'SF Pro Display Bold';
+    background-color: #000000;
+    color: white;
+}
+
+#newTagInput{
+    width: 50%;
+}
+
+
+.close {
+    color: #000000;
+    position: absolute;
+    right: 15px;
+    top: 10px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: black;
 }
