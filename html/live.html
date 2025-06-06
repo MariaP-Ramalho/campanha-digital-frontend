@@ -19,7 +19,7 @@
         <div class="reports">
             <div class="reports-header">
                 <div class="reports-new">
-                    <h5  id="liveTitle">[TAG] Nome da live</h5>
+                    <h5 id="liveTitle">[TAG] Nome da live</h5>
                 </div>
                 <div class="white-line"></div>
                 <div class="tag-container">
@@ -30,16 +30,55 @@
             </div>
 
             <div class="dashboard-container">
+                <div class="dashboard-carousel">
+                    <button class="nav-button" onclick="showPrevDashboard()">&#8592;</button>
 
+                    <div class="dashboard-inner">
+                        <canvas id="sentimentChart"></canvas>
+                        <canvas id="timelineChart" style="display: none;"></canvas>
+                        <canvas id="interactionChart" style="display: none;"></canvas>
+                    </div>
+
+                    <button class="nav-button" onclick="showNextDashboard()">&#8594;</button>
+                </div>
             </div>
+
             <div class="table-container">
-                
+                <div class="comments-info-container">
+                    <h5>Comentários</h5>
+                    <div class="comments-control-container">
+                        <div class="search-box">
+                            <input type="text" id="searchInput" class="search-input">
+                            <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" style="left:4px">
+                                <path d="m21 21-4.34-4.34" />
+                                <circle cx="11" cy="11" r="8" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-wrapper">
+                    <table class="comments-table">
+                        <thead>
+                            <tr>
+                                <th class="col-horario">Horário</th>
+                                <th class="col-autor">Autor</th>
+                                <th class="col-comentario">Comentário</th>
+                                <th class="col-class">Classificação</th>
+                                <th class="col-interacao">Interação</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
             </div>
+
             <div class="view-reports" id="livesContainer"></div>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script src="../script/lives.js"></script>
 
 </body>

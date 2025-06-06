@@ -16,6 +16,9 @@ body {
   align-items: center;
 }
 
+input:focus {
+  outline: none;
+}
 
 .background-container {
   position: fixed;
