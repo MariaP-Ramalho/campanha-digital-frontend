@@ -7,7 +7,8 @@ window.onload = function () {
     .then(lives => {
       const live = lives.find(l => l.liveId === liveId);
       if (live) {
-        const tag = live.tag?.name || "Sem Tag";
+        const tagRaw = live.tag?.name || "Sem Tag";
+        const tag = tagRaw.toUpperCase();
         const title = live.title || "Sem Título";
         document.getElementById("liveTitle").textContent = `[${tag}] ${title}`;
         document.getElementById("liveTag").textContent = `${tag}`;

@@ -55,7 +55,7 @@ function loadLives() {
                 section.className = "tag-section";
 
                 const title = document.createElement("h3");
-                title.textContent = tag;
+                title.textContent = tag.toUpperCase();
 
                 const scrollArea = document.createElement("div");
                 scrollArea.className = "live-scroll";
@@ -63,7 +63,8 @@ function loadLives() {
                 grouped[tag].forEach(live => {
                     const card = document.createElement("div");
                     card.className = "live-card";
-                    const tag = live.tag?.name || live.tag || "Sem Tag";
+                    const tagRaw = live.tag?.name || live.tag || "Sem Tag";
+                    const tag = tagRaw.toUpperCase();
                     const data = live.date || live.createdAt || null;
 
                     card.innerHTML = `
