@@ -31,7 +31,13 @@
 
             <div class="dashboard-container">
                 <div class="dashboard-carousel">
-                    <button class="nav-button" onclick="showPrevDashboard()">&#8592;</button>
+
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="nav-button" onclick="showPrevDashboard()">
+                        <path d="m15 18-6-6 6-6" />
+                    </svg>
+
 
                     <div class="dashboard-inner">
                         <canvas id="sentimentChart"></canvas>
@@ -39,7 +45,12 @@
                         <canvas id="interactionChart" style="display: none;"></canvas>
                     </div>
 
-                    <button class="nav-button" onclick="showNextDashboard()">&#8594;</button>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="nav-button" onclick="showNextDashboard()">
+                        <path d="m9 18 6-6-6-6" />
+                    </svg>
+
                 </div>
             </div>
 
@@ -47,6 +58,33 @@
                 <div class="comments-info-container">
                     <h5>Comentários</h5>
                     <div class="comments-control-container">
+
+                        <div class="analysis-buttons">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="white" stroke="white" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="analysis-button" onclick="startAnalysis()">
+                                <polygon points="6 3 20 12 6 21 6 3" />
+                            </svg>
+
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="white" stroke="white" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="analysis-button" onclick="stopAnalysis()">
+                                <rect x="14" y="4" width="4" height="16" rx="1" />
+                                <rect x="6" y="4" width="4" height="16" rx="1" />
+                            </svg>
+
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="white" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="analysis-button" onclick="refreshComments()">
+                                <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+                                <path d="M3 3v5h5" />
+                            </svg>
+                        </div>
+
+                        <p class="live-info" id="liveIdDisplay"></p>
+                        <p class="live-info" id="status">Status: <span style="font-weight: bolder;" id="statusText">Inativo</span></p>
+                        <p class="live-info" id="counter">Total de Comentários: <span id="commentCount" style="font-weight: bolder;">0</span></p>
+
                         <div class="search-box">
                             <input type="text" id="searchInput" class="search-input">
                             <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24"

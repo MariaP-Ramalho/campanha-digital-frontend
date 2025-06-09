@@ -177,7 +177,6 @@ canvas {
 }
 
 .nav-button {
-    background-color: #565656;
     border: none;
     color: white;
     font-size: 20px;
@@ -187,7 +186,8 @@ canvas {
 }
 
 .nav-button:hover {
-    background-color: #777;
+    background-color: rgba(250, 180, 0, 0.1);
+    color: #ffcb00;
 }
 
 .comments-table {
@@ -275,20 +275,40 @@ canvas {
 }
 
 .comments-control-container {
-    width: 60%;
+    width: 50%;
     height: 100%;
     /* background-color: #8C6100; */
 
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-end;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items:center;
 
+}
+
+.analysis-buttons{
+    /* background-color: aqua; */
+    width: 13%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items:center;
+}
+
+.analysis-button{
+    cursor: pointer;
+}
+
+.live-info{
+    font-family: 'SF Pro Display';
+    /* font-weight: bold; */
+    color: #ffffff;
 }
 
 .search-box {
     position: relative;
-    width: 200px;
+    width: 20%;
+    font-family: 'SF Pro Display';
 }
 
 .search-input {

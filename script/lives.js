@@ -1,6 +1,7 @@
 window.onload = function () {
   const urlParams = new URLSearchParams(window.location.search);
   const liveId = urlParams.get("liveId");
+  document.getElementById("liveIdDisplay").textContent = `ID: ${liveId}`;
 
   fetch(`http://localhost:8080/lives`, { credentials: "include" })
     .then(res => res.json())
@@ -41,45 +42,70 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-function setStatus(running) {
+function setStatus(value) {
   const statusText = document.getElementById("statusText");
-  if (statusText) {
-    statusText.textContent = running ? "Analisando..." : "Parado";
-    statusText.style.color = running ? "green" : "red";
+
+  if (!statusText) return;
+
+  if (value === "running") {
+    statusText.textContent = "Ativo";
+  } else if (value === "stopped") {
+    statusText.textContent = "Inativo";
+  } else if (value === "error") {
+    statusText.textContent = "Finalizado";
   }
 }
 
 
+
+function getLiveIdFromURL() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get("liveId");
+}
+
 function startAnalysis() {
-  const liveId = getLiveId();
-  if (!liveId) return alert("Insira um ID de live.");
+  const liveId = getLiveIdFromURL();
+  if (!liveId) return alert("ID da live não encontrado.");
 
   fetch(`http://localhost:8080/live/start/${liveId}`, {
     method: 'POST',
     credentials: 'include'
   })
-    .then(response => response.text())
+    .then(response => {
+      if (!response.ok) {
+        return response.text().then(msg => {
+          throw new Error(msg || "Erro ao iniciar análise");
+        });
+      }
+      return response.text();
+    })
     .then(msg => {
       alert(msg);
-      setStatus(true);
+      setStatus("running");
       intervalId = setInterval(() => fetchComments(liveId), 5000);
     })
-    .catch(() => alert("Erro ao iniciar análise"));
+    .catch(err => {
+      console.error(err);
+      alert(err.message || "Erro ao iniciar análise");
+      setStatus("error");
+    });
 }
 
-
 function stopAnalysis() {
+  clearInterval(intervalId);
+  setStatus("stopped");
+
   fetch(`http://localhost:8080/live/stop`, {
     method: 'POST',
     credentials: 'include'
   })
     .then(() => {
-      clearInterval(intervalId);
-      setStatus(false);
       alert("Análise parada.");
+    })
+    .catch(() => {
+      alert("Erro ao parar análise.");
     });
 }
-
 
 function refreshComments() {
   const liveId = getLiveId();
@@ -93,12 +119,15 @@ function getLiveId() {
 }
 
 
-function fetchComments(liveId) {
+function fetchComments() {
+  const liveId = getLiveIdFromURL();
+  if (!liveId) return;
+
   fetch(`http://localhost:8080/comments/${liveId}`, {
     credentials: "include"
   })
     .then(response => {
-      if (!response.ok) throw new Error("Erro ao buscar comentários: " + response.status);
+      if (!response.ok) throw new Error("Erro ao buscar comentários.");
       return response.json();
     })
     .then(comments => {
@@ -113,6 +142,7 @@ function fetchComments(liveId) {
       alert("Erro ao buscar comentários.");
     });
 }
+
 
 
 function renderCommentsTable(comments) {
