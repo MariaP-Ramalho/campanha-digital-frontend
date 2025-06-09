@@ -282,24 +282,34 @@ canvas {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    align-items:center;
+    align-items: center;
 
 }
 
-.analysis-buttons{
+.analysis-buttons {
     /* background-color: aqua; */
     width: 13%;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    align-items:center;
+    align-items: center;
 }
 
-.analysis-button{
-    cursor: pointer;
+.analysis-button {
+  cursor: pointer;
+  color: white;
+  transition: color 0.1s;
 }
 
-.live-info{
+.analysis-button:hover {
+  color: #FAB400;
+}
+
+.analysis-button:active {
+  color: #a87901;
+}
+
+.live-info {
     font-family: 'SF Pro Display';
     /* font-weight: bold; */
     color: #ffffff;
@@ -347,6 +357,7 @@ canvas {
     text-align: left;
     padding: 10px;
 }
+
 .comments-table tr:hover {
     background-color: #2c2c2c;
 }
@@ -386,16 +397,16 @@ canvas {
 }
 
 .comments-table tbody::-webkit-scrollbar {
-  width: 8px;
-  background: transparent;
+    width: 8px;
+    background: transparent;
 }
 
 .comments-table tbody::-webkit-scrollbar-thumb {
-  background-color: transparent;
-  border-radius: 10px;
-  transition: background-color 0.3s;
+    background-color: transparent;
+    border-radius: 10px;
+    transition: background-color 0.3s;
 }
 
 .comments-table tbody:hover::-webkit-scrollbar-thumb {
-  background-color: #444;
+    background-color: #444;
 }
