@@ -150,7 +150,18 @@ function addTransmissao() {
     const title = document.getElementById("title").value;
     const tagSelect = document.getElementById("tagSelect").value;
     const newTag = document.getElementById("newTagInput").value;
+
     const tagName = tagSelect === "__new__" ? newTag : tagSelect;
+
+    if (!tagName || tagName === "") {
+        alert("Você precisa selecionar ou criar uma tag.");
+        return;
+    }
+
+    if (!liveId || !title) {
+        alert("Preencha o título e o ID da live.");
+        return;
+    }
 
     fetch("http://localhost:8080/lives", {
         method: "POST",
