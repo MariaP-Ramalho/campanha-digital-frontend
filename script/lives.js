@@ -22,13 +22,15 @@ window.onload = function () {
       document.getElementById("liveTitle").textContent = "Erro ao carregar live";
     });
 
-  fetchComments(liveId);
+  checkLiveStatus();
 }
 
 let intervalId = null;
 let sentimentChart = null;
 let timelineChart = null;
 let interactionChart = null;
+let checkStatusIntervalId = null;
+let analysisRunning = false;
 
 const dashboards = ["sentimentChart", "timelineChart", "interactionChart"];
 let dashboardIndex = 0;
@@ -41,20 +43,41 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
+function checkLiveStatus() {
+  const liveId = getLiveIdFromURL();
+  if (!liveId) return;
 
-function setStatus(value) {
-  const statusText = document.getElementById("statusText");
+  fetch(`http://localhost:8080/lives`, { credentials: "include" })
+    .then(res => res.json())
+    .then(lives => {
+      const live = lives.find(l => l.liveId === liveId);
+      if (!live) return;
 
-  if (!statusText) return;
+      const statusText = document.getElementById("statusText");
 
-  if (value === "running") {
-    statusText.textContent = "Ativo";
-  } else if (value === "stopped") {
-    statusText.textContent = "Inativo";
-  } else if (value === "error") {
-    statusText.textContent = "Finalizado";
-  }
+      if (statusText.textContent !== capitalize(live.status)) {
+        statusText.textContent = capitalize(live.status);
+
+        if (live.status === "FINALIZADO") {
+          clearInterval(intervalId);
+          clearInterval(checkStatusIntervalId);
+
+          if (analysisRunning) {
+            alert("A live foi finalizada.");
+          }
+          analysisRunning = false;
+        }
+      }
+    })
+    .catch(err => {
+      console.error("Erro ao verificar status da live:", err);
+    });
 }
+
+function capitalize(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+}
+
 
 
 
@@ -81,19 +104,21 @@ function startAnalysis() {
     })
     .then(msg => {
       alert(msg);
-      setStatus("running");
       intervalId = setInterval(() => fetchComments(liveId), 5000);
+      checkStatusIntervalId = setInterval(checkLiveStatus, 5000);
+      analysisRunning = true;
     })
     .catch(err => {
       console.error(err);
       alert(err.message || "Erro ao iniciar análise");
-      setStatus("error");
+      checkLiveStatus();
+      clearInterval(intervalId);
+      clearInterval(checkStatusIntervalId);
+      analysisRunning = false;
     });
 }
 
 function stopAnalysis() {
-  clearInterval(intervalId);
-  setStatus("stopped");
 
   fetch(`http://localhost:8080/live/stop`, {
     method: 'POST',
@@ -101,6 +126,10 @@ function stopAnalysis() {
   })
     .then(() => {
       alert("Análise parada.");
+      checkLiveStatus();
+      clearInterval(intervalId);
+      clearInterval(checkStatusIntervalId);
+      analysisRunning = false;
     })
     .catch(() => {
       alert("Erro ao parar análise.");
@@ -339,4 +368,3 @@ document.addEventListener("input", () => {
     row.style.display = match ? "" : "none";
   });
 });
-
