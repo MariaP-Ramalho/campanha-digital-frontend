@@ -8,50 +8,45 @@
 </head>
 
 <body>
-
     <div class="background-container"></div>
 
     <header>
         <img src="../img/login/Logo.svg" alt="Logo da empresa">
     </header>
 
-    <div id="novaTransmissaoModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-
-            <label for="title">Título:</label><br>
-            <input type="text" id="title"><br><br>
-
-            <label for="liveId">ID:</label><br>
-            <input type="text" id="liveId"><br><br>
-
-            <label for="tagSelect">Tag:</label><br>
-            <select id="tagSelect" onchange="toggleNewTagInput()">
-                <option value="" disabled selected>Escolha uma tag</option>
-                <option value="__new__">Criar nova tag...</option>
-            </select>
-
-            <input type="text" id="newTagInput" style="display:none;" placeholder="Insira nova tag"><br><br>
-
-            <button onclick="addTransmissao()">ADICIONAR</button>
-        </div>
-    </div>
-
-    <div class="main-content">
-        <div class="reports">
+    <main class="main-content">
+        <section class="reports">
             <div class="reports-header">
                 <div class="reports-new">
                     <h5>Relatórios</h5>
-                    <button>NOVA TRANSMISSÃO</button>
+                    <button id="openModalBtn">NOVA TRANSMISSÃO</button>
                 </div>
                 <div class="white-line"></div>
             </div>
-            <div class="view-reports" id="livesContainer"></div>
+            <div id="livesContainer" class="view-reports"></div>
+        </section>
+    </main>
+
+    <div id="novaTransmissaoModal" class="modal" aria-hidden="true">
+        <div class="modal-content">
+            <button class="close" id="closeModalBtn" aria-label="Fechar modal">&times;</button>
+
+            <label for="title">Título:</label><br>
+            <input type="text" id="title" autocomplete="off"><br><br>
+
+            <label for="liveId">ID da Live:</label><br>
+            <input type="text" id="liveId" autocomplete="off"><br><br>
+
+            <label for="tagSelect">Tag:</label><br>
+            <select id="tagSelect"></select>
+
+            <input type="text" id="newTagInput" style="display:none;" placeholder="Insira nova tag"><br><br>
+
+            <button id="addTransmissaoBtn">ADICIONAR</button>
         </div>
     </div>
 
     <script src="../script/home.js"></script>
-
 </body>
 
 </html>
