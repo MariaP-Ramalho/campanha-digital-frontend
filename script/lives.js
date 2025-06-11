@@ -5,7 +5,7 @@ let sentimentChart = null;
 let timelineChart = null;
 let interactionChart = null;
 
-const dashboards = ["sentimentChart", "timelineChart", "interactionChart"];
+const dashboards = ["timelineChart", "sentimentChart", "interactionChart"];
 let dashboardIndex = 0;
 
 document.addEventListener("DOMContentLoaded", () => {
