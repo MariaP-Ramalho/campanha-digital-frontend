@@ -37,35 +37,35 @@ function loadTags() {
 }
 
 function deleteLive(liveId) {
-  if (!confirm("Tem certeza que deseja deletar esta live?")) return;
-  fetch(`http://localhost:8080/lives/${liveId}`, {
-    method: "DELETE",
-    credentials: "include"
-  }).then(res => {
-    if (res.ok) {
-      loadLives();
-    } else {
-      alert("Erro ao deletar live");
-    }
-  });
+    if (!confirm("Tem certeza que deseja deletar esta live?")) return;
+    fetch(`http://localhost:8080/lives/${liveId}`, {
+        method: "DELETE",
+        credentials: "include"
+    }).then(res => {
+        if (res.ok) {
+            loadLives();
+        } else {
+            alert("Erro ao deletar live");
+        }
+    });
 }
 
 function editLive(liveId, currentTitle) {
-  const newTitle = prompt("Novo título da live:", currentTitle);
-  if (newTitle && newTitle !== currentTitle) {
-    fetch(`http://localhost:8080/lives/${liveId}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title: newTitle }),
-      credentials: "include"
-    }).then(res => {
-      if (res.ok) {
-        loadLives();
-      } else {
-        alert("Erro ao atualizar título da live");
-      }
-    });
-  }
+    const newTitle = prompt("Novo título da live:", currentTitle);
+    if (newTitle && newTitle !== currentTitle) {
+        fetch(`http://localhost:8080/lives/${liveId}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ title: newTitle }),
+            credentials: "include"
+        }).then(res => {
+            if (res.ok) {
+                loadLives();
+            } else {
+                alert("Erro ao atualizar título da live");
+            }
+        });
+    }
 }
 
 
@@ -106,11 +106,18 @@ function loadLives() {
                         <div class="live-header">
                             <div class="live-title">[${tag}] ${live.title}</div>
                             <div class="live-actions">
+
+                            <button onclick="event.stopPropagation(); updateTag('${live.liveId}')">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 22 22" fill="none" stroke="currentColor" 
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bookmark-icon lucide-bookmark">
+                            <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></svg>
+                            </button>
+                            
                             <button onclick="event.stopPropagation(); editLive('${live.liveId}', '${live.title}')" title="Editar">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor"
                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                                 class="lucide lucide-square-pen-icon lucide-square-pen">
-                                <path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                                <path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>s
                                 <path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z"/>
                                 </svg>
                             </button>
@@ -183,3 +190,24 @@ window.onload = function () {
     loadTags();
     loadLives();
 };
+
+function updateTag(liveId) {
+    const newTag = prompt("Digite a nova tag:");
+
+    if (!newTag || newTag.trim() === "") return;
+
+    fetch(`http://localhost:8080/lives/${liveId}/tag`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ tagName: newTag })
+    }).then(res => {
+        if (res.ok) {
+            alert("Tag atualizada!");
+            loadLives();
+        } else {
+            alert("Erro ao atualizar tag.");
+        }
+    });
+}
+
