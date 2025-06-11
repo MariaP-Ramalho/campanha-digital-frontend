@@ -232,7 +232,8 @@ function buildSentimentChart(comments) {
         labels: labels,
         datasets: [{
           data: values,
-          backgroundColor: ['#FFEB8A', '#F57C1F', '#F59A55']
+          backgroundColor: ['#FFEB8A', '#F57C1F', '#F59A55'],
+          borderWidth: 0
         }]
       },
       options: {
