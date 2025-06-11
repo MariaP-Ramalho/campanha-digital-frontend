@@ -193,57 +193,107 @@ function buildSentimentChart(comments) {
 }
 
 function buildTimelineChart(comments) {
-  const buckets = {};
+  const buckets = {}; // total
+  const positives = {};
+  const negatives = {};
+  const neutrals = {};
+
   comments.forEach(c => {
     const time = new Date(c.commentsDetailsData?.commentTimeStamp);
     const key = time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+    const sentiment = c.sentiment?.toLowerCase() || "neutro";
+
     buckets[key] = (buckets[key] || 0) + 1;
+
+    if (sentiment === "positivo") {
+      positives[key] = (positives[key] || 0) + 1;
+    } else if (sentiment === "negativo") {
+      negatives[key] = (negatives[key] || 0) + 1;
+    } else {
+      neutrals[key] = (neutrals[key] || 0) + 1;
+    }
   });
 
-  const labels = Object.keys(buckets).sort();
-  const values = labels.map(k => buckets[k]);
+  const labels = Array.from(new Set([
+    ...Object.keys(buckets),
+    ...Object.keys(positives),
+    ...Object.keys(negatives),
+    ...Object.keys(neutrals)
+  ])).sort();
+
+  const totalData = labels.map(k => buckets[k] || 0);
+  const posData = labels.map(k => positives[k] || 0);
+  const negData = labels.map(k => negatives[k] || 0);
+  const neuData = labels.map(k => neutrals[k] || 0);
+
   const ctx = document.getElementById("timelineChart").getContext("2d");
 
   if (timelineChart) {
     timelineChart.data.labels = labels;
-    timelineChart.data.datasets[0].data = values;
+    timelineChart.data.datasets[0].data = totalData;
+    timelineChart.data.datasets[1].data = posData;
+    timelineChart.data.datasets[2].data = negData;
+    timelineChart.data.datasets[3].data = neuData;
     timelineChart.update();
   } else {
     timelineChart = new Chart(ctx, {
       type: "line",
       data: {
         labels,
-        datasets: [{
-          label: "Comentários por horário",
-          data: values,
-          borderColor: "white",
-          pointBackgroundColor: "white",
-          pointBorderColor: "white"
-        }]
+        datasets: [
+          {
+            label: "Total",
+            data: totalData,
+            borderColor: "white",
+            pointBackgroundColor: "white",
+            tension: 0.3
+          },
+          {
+            label: "Positivos",
+            data: posData,
+            borderColor: "#00C853",
+            pointBackgroundColor: "#00C853",
+            tension: 0.3
+          },
+          {
+            label: "Negativos",
+            data: negData,
+            borderColor: "#D50000",
+            pointBackgroundColor: "#D50000",
+            tension: 0.3
+          },
+          {
+            label: "Neutros",
+            data: neuData,
+            borderColor: "#FFAB00",
+            pointBackgroundColor: "#FFAB00",
+            tension: 0.3
+          }
+        ]
       },
       options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            position: "bottom"
+          }
+        },
         scales: {
           x: {
-            grid: {
-              color: "rgba(250, 180, 0, 0.2)"
-            },
-            ticks: {
-              color: "white"
-            }
+            grid: { color: "rgba(250, 180, 0, 0.2)" },
+            ticks: { color: "white" }
           },
           y: {
-            grid: {
-              color: "rgba(250, 180, 0, 0.2)"
-            },
-            ticks: {
-              color: "white"
-            }
+            grid: { color: "rgba(250, 180, 0, 0.2)" },
+            ticks: { color: "white" }
           }
         }
       }
     });
   }
 }
+
 
 function buildInteractionChart(comments) {
   const types = {};
