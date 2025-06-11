@@ -179,7 +179,16 @@ function buildSentimentChart(comments) {
     sentimentChart.data = data;
     sentimentChart.update();
   } else {
-    sentimentChart = new Chart(ctx, { type: "pie", data, options: { plugins: { legend: { position: "bottom" } } } });
+    sentimentChart = new Chart(ctx, {
+      type: "pie",
+      data, options: {
+        plugins: {
+          legend: {
+            position: "bottom"
+          }
+        }
+      }
+    });
   }
 }
 
@@ -202,8 +211,36 @@ function buildTimelineChart(comments) {
   } else {
     timelineChart = new Chart(ctx, {
       type: "line",
-      data: { labels, datasets: [{ label: "Comentários por horário", data: values, borderColor: "white" }] },
-      options: { scales: { x: { ticks: { color: "white" } }, y: { ticks: { color: "white" } } } }
+      data: {
+        labels,
+        datasets: [{
+          label: "Comentários por horário",
+          data: values,
+          borderColor: "white",
+          pointBackgroundColor: "white",
+          pointBorderColor: "white"
+        }]
+      },
+      options: {
+        scales: {
+          x: {
+            grid: {
+              color: "rgba(250, 180, 0, 0.2)"
+            },
+            ticks: {
+              color: "white"
+            }
+          },
+          y: {
+            grid: {
+              color: "rgba(250, 180, 0, 0.2)"
+            },
+            ticks: {
+              color: "white"
+            }
+          }
+        }
+      }
     });
   }
 }
@@ -226,8 +263,21 @@ function buildInteractionChart(comments) {
   } else {
     interactionChart = new Chart(ctx, {
       type: "bar",
-      data: { labels, datasets: [{ label: "Interações", data: values, backgroundColor: "#F57C1F" }] },
-      options: { plugins: { legend: { display: false } } }
+      data: {
+        labels,
+        datasets: [{
+          label: "Interações",
+          data: values,
+          backgroundColor: "#F57C1F"
+        }]
+      },
+      options: {
+        plugins: {
+          legend: {
+            display: false
+          }
+        }
+      }
     });
   }
 }
