@@ -8,15 +8,14 @@
 </head>
 
 <body>
-
     <div class="background-container"></div>
 
     <header>
         <img src="../img/login/Logo.svg" alt="Logo da empresa">
     </header>
 
-    <div class="main-content">
-        <div class="reports">
+    <main class="main-content">
+        <section class="reports">
             <div class="reports-header">
                 <div class="reports-new">
                     <h5 id="liveTitle">[TAG] Nome da live</h5>
@@ -29,15 +28,15 @@
                 </div>
             </div>
 
-            <div class="dashboard-container">
+            <section class="dashboard-container">
                 <div class="dashboard-carousel">
 
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                        class="nav-button" onclick="showPrevDashboard()">
-                        <path d="m15 18-6-6 6-6" />
-                    </svg>
-
+                    <button class="nav-button" id="btnPrevDashboard" aria-label="Gráfico anterior">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m15 18-6-6 6-6" />
+                        </svg>
+                    </button>
 
                     <div class="dashboard-inner">
                         <canvas id="sentimentChart"></canvas>
@@ -45,48 +44,55 @@
                         <canvas id="interactionChart" style="display: none;"></canvas>
                     </div>
 
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                        class="nav-button" onclick="showNextDashboard()">
-                        <path d="m9 18 6-6-6-6" />
-                    </svg>
+                    <button class="nav-button" id="btnNextDashboard" aria-label="Próximo gráfico">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m9 18 6-6-6-6" />
+                        </svg>
+                    </button>
 
                 </div>
-            </div>
+            </section>
 
-            <div class="table-container">
+            <section class="table-container">
                 <div class="comments-info-container">
                     <h5>Comentários</h5>
                     <div class="comments-control-container">
 
                         <div class="analysis-buttons">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round" class="analysis-button" onclick="startAnalysis()">
-                                <polygon points="6 3 20 12 6 21 6 3" />
-                            </svg>
-
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round" class="analysis-button" onclick="stopAnalysis()">
-                                <rect x="14" y="4" width="4" height="16" rx="1" />
-                                <rect x="6" y="4" width="4" height="16" rx="1" />
-                            </svg>
-
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round" class="analysis-button" onclick="refreshComments()">
-                                <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
-                                <path d="M3 3v5h5" />
-                            </svg>
+                            <button id="btnStart" class="analysis-button" aria-label="Iniciar análise">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <polygon points="6 3 20 12 6 21 6 3" />
+                                </svg>
+                            </button>
+                            <button id="btnStop" class="analysis-button" aria-label="Parar análise">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <rect x="14" y="4" width="4" height="16" rx="1" />
+                                    <rect x="6" y="4" width="4" height="16" rx="1" />
+                                </svg>
+                            </button>
+                            <button id="btnRefresh" class="analysis-button" aria-label="Atualizar comentários">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+                                    <path d="M3 3v5h5" />
+                                </svg>
+                            </button>
                         </div>
 
                         <p class="live-info" id="liveIdDisplay"></p>
-                        <p class="live-info" id="status">Status: <span style="font-weight: bolder;" id="statusText">Inativo</span></p>
-                        <p class="live-info" id="counter">Total de Comentários: <span id="commentCount" style="font-weight: bolder;">0</span></p>
+                        <p class="live-info" id="status">Status: <span style="font-weight: bolder;"
+                                id="statusText">Inativo</span></p>
+                        <p class="live-info" id="counter">Total de Comentários: <span id="commentCount"
+                                style="font-weight: bolder;">0</span></p>
 
                         <div class="search-box">
-                            <input type="text" id="searchInput" class="search-input">
+                            <input type="text" id="searchInput" class="search-input" placeholder="Buscar...">
                             <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                 stroke-linecap="round" stroke-linejoin="round" style="left:4px">
@@ -96,6 +102,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="table-wrapper">
                     <table class="comments-table">
                         <thead>
@@ -110,15 +117,13 @@
                         <tbody></tbody>
                     </table>
                 </div>
-            </div>
+            </section>
 
-            <div class="view-reports" id="livesContainer"></div>
-        </div>
-    </div>
+        </section>
+    </main>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script src="../script/lives.js"></script>
-
 </body>
 
 </html>

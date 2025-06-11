@@ -1,213 +1,162 @@
-window.onload = function () {
-  const urlParams = new URLSearchParams(window.location.search);
-  const liveId = urlParams.get("liveId");
-  document.getElementById("liveIdDisplay").textContent = `ID: ${liveId}`;
-
-  fetch(`http://localhost:8080/lives`, { credentials: "include" })
-    .then(res => res.json())
-    .then(lives => {
-      const live = lives.find(l => l.liveId === liveId);
-      if (live) {
-        const tagRaw = live.tag?.name || "Sem Tag";
-        const tag = tagRaw.toUpperCase();
-        const title = live.title || "Sem Título";
-        document.getElementById("liveTitle").textContent = `[${tag}] ${title}`;
-        document.getElementById("liveTag").textContent = `${tag}`;
-      } else {
-        document.getElementById("liveTitle").textContent = "Live não encontrada";
-      }
-    })
-    .catch(err => {
-      console.error("Erro ao buscar live:", err);
-      document.getElementById("liveTitle").textContent = "Erro ao carregar live";
-    });
-
-  checkLiveStatus();
-}
-
 let intervalId = null;
+let checkStatusIntervalId = null;
+let analysisRunning = false;
 let sentimentChart = null;
 let timelineChart = null;
 let interactionChart = null;
-let checkStatusIntervalId = null;
-let analysisRunning = false;
 
 const dashboards = ["sentimentChart", "timelineChart", "interactionChart"];
 let dashboardIndex = 0;
 
 document.addEventListener("DOMContentLoaded", () => {
-  const urlParams = new URLSearchParams(window.location.search);
-  const liveId = urlParams.get("liveId");
-  if (liveId) {
-    fetchComments(liveId);
-  }
+  const liveId = getLiveIdFromURL();
+  if (!liveId) return alert("ID da live não encontrado.");
+
+  document.getElementById("liveIdDisplay").textContent = `ID: ${liveId}`;
+
+  document.getElementById("btnStart").addEventListener("click", startAnalysis);
+  document.getElementById("btnStop").addEventListener("click", stopAnalysis);
+  document.getElementById("btnRefresh").addEventListener("click", refreshComments);
+  document.getElementById("btnNextDashboard").addEventListener("click", showNextDashboard);
+  document.getElementById("btnPrevDashboard").addEventListener("click", showPrevDashboard);
+  document.getElementById("searchInput").addEventListener("input", filterComments);
+
+  fetchLiveInfo(liveId);
+  checkLiveStatus();
+  fetchComments();
 });
 
-function checkLiveStatus() {
+function getLiveIdFromURL() {
+  return new URLSearchParams(window.location.search).get("liveId");
+}
+
+async function fetchLiveInfo(liveId) {
+  try {
+    const res = await fetch("http://localhost:8080/lives", { credentials: "include" });
+    const lives = await res.json();
+    const live = lives.find(l => l.liveId === liveId);
+    if (!live) return (document.getElementById("liveTitle").textContent = "Live não encontrada");
+
+    const tag = (live.tag?.name || "Sem Tag").toUpperCase();
+    document.getElementById("liveTitle").textContent = `[${tag}] ${live.title || "Sem Título"}`;
+    document.getElementById("liveTag").textContent = tag;
+  } catch (err) {
+    console.error("Erro ao carregar live:", err);
+    document.getElementById("liveTitle").textContent = "Erro ao carregar live";
+  }
+}
+
+async function startAnalysis() {
   const liveId = getLiveIdFromURL();
-  if (!liveId) return;
-
-  fetch(`http://localhost:8080/lives`, { credentials: "include" })
-    .then(res => res.json())
-    .then(lives => {
-      const live = lives.find(l => l.liveId === liveId);
-      if (!live) return;
-
-      const statusText = document.getElementById("statusText");
-
-      if (statusText.textContent !== capitalize(live.status)) {
-        statusText.textContent = capitalize(live.status);
-
-        if (live.status === "FINALIZADO") {
-          clearInterval(intervalId);
-          clearInterval(checkStatusIntervalId);
-
-          if (analysisRunning) {
-            alert("A live foi finalizada.");
-          }
-          analysisRunning = false;
-        }
-      }
-    })
-    .catch(err => {
-      console.error("Erro ao verificar status da live:", err);
+  try {
+    const res = await fetch(`http://localhost:8080/live/start/${liveId}`, {
+      method: "POST",
+      credentials: "include"
     });
+    if (!res.ok) throw new Error(await res.text());
+
+    alert(await res.text());
+    intervalId = setInterval(() => fetchComments(liveId), 5000);
+    checkStatusIntervalId = setInterval(() => checkLiveStatus(), 5000);
+    analysisRunning = true;
+  } catch (err) {
+    alert(err.message || "Erro ao iniciar análise");
+    stopTimers();
+  }
+}
+
+function stopAnalysis() {
+  fetch("http://localhost:8080/live/stop", {
+    method: "POST",
+    credentials: "include"
+  })
+    .then(() => {
+      alert("Análise parada.");
+      stopTimers();
+    })
+    .catch(() => alert("Erro ao parar análise."));
+}
+
+function stopTimers() {
+  clearInterval(intervalId);
+  clearInterval(checkStatusIntervalId);
+  analysisRunning = false;
+}
+
+async function checkLiveStatus() {
+  const liveId = getLiveIdFromURL();
+  try {
+    const res = await fetch("http://localhost:8080/lives", { credentials: "include" });
+    const lives = await res.json();
+    const live = lives.find(l => l.liveId === liveId);
+    if (!live) return;
+
+    const newStatus = capitalize(live.status);
+    const statusText = document.getElementById("statusText");
+    if (statusText.textContent !== newStatus) {
+      statusText.textContent = newStatus;
+      if (newStatus === "Finalizado" && analysisRunning) {
+        alert("A live foi finalizada.");
+        stopTimers();
+      }
+    }
+  } catch (err) {
+    console.error("Erro ao verificar status da live:", err);
+  }
 }
 
 function capitalize(str) {
   return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 }
 
-
-
-
-function getLiveIdFromURL() {
-  const params = new URLSearchParams(window.location.search);
-  return params.get("liveId");
-}
-
-function startAnalysis() {
+async function fetchComments() {
   const liveId = getLiveIdFromURL();
-  if (!liveId) return alert("ID da live não encontrado.");
-
-  fetch(`http://localhost:8080/live/start/${liveId}`, {
-    method: 'POST',
-    credentials: 'include'
-  })
-    .then(response => {
-      if (!response.ok) {
-        return response.text().then(msg => {
-          throw new Error(msg || "Erro ao iniciar análise");
-        });
-      }
-      return response.text();
-    })
-    .then(msg => {
-      alert(msg);
-      intervalId = setInterval(() => fetchComments(liveId), 5000);
-      checkStatusIntervalId = setInterval(checkLiveStatus, 5000);
-      analysisRunning = true;
-    })
-    .catch(err => {
-      console.error(err);
-      alert(err.message || "Erro ao iniciar análise");
-      checkLiveStatus();
-      clearInterval(intervalId);
-      clearInterval(checkStatusIntervalId);
-      analysisRunning = false;
-    });
+  try {
+    const res = await fetch(`http://localhost:8080/comments/${liveId}`, { credentials: "include" });
+    if (!res.ok) throw new Error("Erro ao buscar comentários.");
+    const comments = await res.json();
+    renderCommentsTable(comments);
+    buildSentimentChart(comments);
+    buildTimelineChart(comments);
+    buildInteractionChart(comments);
+    showDashboard(0);
+  } catch (err) {
+    alert(err.message);
+  }
 }
-
-function stopAnalysis() {
-
-  fetch(`http://localhost:8080/live/stop`, {
-    method: 'POST',
-    credentials: 'include'
-  })
-    .then(() => {
-      alert("Análise parada.");
-      checkLiveStatus();
-      clearInterval(intervalId);
-      clearInterval(checkStatusIntervalId);
-      analysisRunning = false;
-    })
-    .catch(() => {
-      alert("Erro ao parar análise.");
-    });
-}
-
-function refreshComments() {
-  const liveId = getLiveId();
-  if (!liveId) return alert("Insira o ID da live para atualizar os comentários.");
-  fetchComments(liveId);
-}
-
-function getLiveId() {
-  const urlParams = new URLSearchParams(window.location.search);
-  return urlParams.get("liveId");
-}
-
-
-function fetchComments() {
-  const liveId = getLiveIdFromURL();
-  if (!liveId) return;
-
-  fetch(`http://localhost:8080/comments/${liveId}`, {
-    credentials: "include"
-  })
-    .then(response => {
-      if (!response.ok) throw new Error("Erro ao buscar comentários.");
-      return response.json();
-    })
-    .then(comments => {
-      renderCommentsTable(comments);
-      buildSentimentChart(comments);
-      buildTimelineChart(comments);
-      buildInteractionChart(comments);
-      showDashboard(0);
-    })
-    .catch(err => {
-      console.error(err);
-      alert("Erro ao buscar comentários.");
-    });
-}
-
-
 
 function renderCommentsTable(comments) {
   const tbody = document.querySelector(".comments-table tbody");
   if (!tbody) return;
-
   tbody.innerHTML = "";
   comments.forEach(c => {
     const tr = document.createElement("tr");
     tr.innerHTML = `
-        <td class="col-horario">
-          ${new Date(c.commentsDetailsData?.commentTimeStamp)
-        .toLocaleTimeString('pt-BR', {
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit',
-          hour12: false
-        })}
-        </td>
-        <td class="col-autor">
-          <a href="${c.authorDetailsData?.channelUrl}" target="_blank" class="author-link">
-            <img src="${c.authorDetailsData?.userProfileImageUrl}" alt="foto de perfil" class="author-avatar">
-            <span>${c.authorDetailsData?.userDisplayName || "?"}</span>
-          </a>
-        </td>
-        <td class="col-comentario">${c.commentsDetailsData?.commentContent || ""}</td>
-        <td class="col-class">${c.sentiment || "-"}</td>
-        <td class="col-interacao">${c.interaction || "-"}</td>
-      `;
+      <td class="col-horario">${formatTime(c.commentsDetailsData?.commentTimeStamp)}</td>
+      <td class="col-autor">
+        <a href="${c.authorDetailsData?.channelUrl}" target="_blank" class="author-link">
+          <img src="${c.authorDetailsData?.userProfileImageUrl}" class="author-avatar">
+          <span>${c.authorDetailsData?.userDisplayName || "?"}</span>
+        </a>
+      </td>
+      <td class="col-comentario">${c.commentsDetailsData?.commentContent || ""}</td>
+      <td class="col-class">${c.sentiment || "-"}</td>
+      <td class="col-interacao">${c.interaction || "-"}</td>
+    `;
     tbody.appendChild(tr);
   });
-
-  const count = document.getElementById("commentCount");
-  if (count) count.textContent = comments.length;
+  document.getElementById("commentCount").textContent = comments.length;
 }
 
+function formatTime(timestamp) {
+  if (!timestamp) return "--:--:--";
+  return new Date(timestamp).toLocaleTimeString("pt-BR", {
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false
+  });
+}
 
 function buildSentimentChart(comments) {
   const counts = {};
@@ -216,47 +165,35 @@ function buildSentimentChart(comments) {
     counts[sentiment] = (counts[sentiment] || 0) + 1;
   });
 
-  const labels = Object.keys(counts);
-  const values = Object.values(counts);
-
-  const ctx = document.getElementById('sentimentChart').getContext('2d');
+  const ctx = document.getElementById("sentimentChart").getContext("2d");
+  const data = {
+    labels: Object.keys(counts),
+    datasets: [{
+      data: Object.values(counts),
+      backgroundColor: ["#FFEB8A", "#F57C1F", "#F59A55"],
+      borderWidth: 0
+    }]
+  };
 
   if (sentimentChart) {
-    sentimentChart.data.labels = labels;
-    sentimentChart.data.datasets[0].data = values;
+    sentimentChart.data = data;
     sentimentChart.update();
   } else {
-    sentimentChart = new Chart(ctx, {
-      type: 'pie',
-      data: {
-        labels: labels,
-        datasets: [{
-          data: values,
-          backgroundColor: ['#FFEB8A', '#F57C1F', '#F59A55'],
-          borderWidth: 0
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: { legend: { position: 'bottom' } }
-      }
-    });
+    sentimentChart = new Chart(ctx, { type: "pie", data, options: { plugins: { legend: { position: "bottom" } } } });
   }
 }
 
-
 function buildTimelineChart(comments) {
-  const timeBuckets = {};
+  const buckets = {};
   comments.forEach(c => {
     const time = new Date(c.commentsDetailsData?.commentTimeStamp);
     const key = time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    timeBuckets[key] = (timeBuckets[key] || 0) + 1;
+    buckets[key] = (buckets[key] || 0) + 1;
   });
 
-  const labels = Object.keys(timeBuckets).sort();
-  const values = labels.map(k => timeBuckets[k]);
-
-  const ctx = document.getElementById('timelineChart').getContext('2d');
+  const labels = Object.keys(buckets).sort();
+  const values = labels.map(k => buckets[k]);
+  const ctx = document.getElementById("timelineChart").getContext("2d");
 
   if (timelineChart) {
     timelineChart.data.labels = labels;
@@ -264,42 +201,9 @@ function buildTimelineChart(comments) {
     timelineChart.update();
   } else {
     timelineChart = new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: labels,
-        datasets: [{
-          label: 'Comentários por horário',
-          data: values,
-          borderColor: 'white',
-          pointBackgroundColor: 'white'
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: {
-            display: false
-          }
-        },
-        scales: {
-          x: {
-            grid: {
-              color: 'rgba(250, 180, 0, 0.3)'
-            },
-            ticks: {
-              color: 'white'
-            }
-          },
-          y: {
-            grid: {
-              color: 'rgba(250, 180, 0, 0.3)'
-            },
-            ticks: {
-              color: 'white'
-            }
-          }
-        }
-      }
+      type: "line",
+      data: { labels, datasets: [{ label: "Comentários por horário", data: values, borderColor: "white" }] },
+      options: { scales: { x: { ticks: { color: "white" } }, y: { ticks: { color: "white" } } } }
     });
   }
 }
@@ -307,14 +211,13 @@ function buildTimelineChart(comments) {
 function buildInteractionChart(comments) {
   const types = {};
   comments.forEach(c => {
-    const interaction = c.interaction || "Outro";
-    types[interaction] = (types[interaction] || 0) + 1;
+    const type = c.interaction || "Outro";
+    types[type] = (types[type] || 0) + 1;
   });
 
+  const ctx = document.getElementById("interactionChart").getContext("2d");
   const labels = Object.keys(types);
   const values = Object.values(types);
-
-  const ctx = document.getElementById('interactionChart').getContext('2d');
 
   if (interactionChart) {
     interactionChart.data.labels = labels;
@@ -322,28 +225,17 @@ function buildInteractionChart(comments) {
     interactionChart.update();
   } else {
     interactionChart = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: labels,
-        datasets: [{
-          label: 'Tipo de Interação',
-          data: values,
-          backgroundColor: '#F57C1F'
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: { legend: { display: false } }
-      }
+      type: "bar",
+      data: { labels, datasets: [{ label: "Interações", data: values, backgroundColor: "#F57C1F" }] },
+      options: { plugins: { legend: { display: false } } }
     });
   }
 }
 
-
 function showDashboard(index) {
   dashboards.forEach((id, i) => {
-    const canvas = document.getElementById(id);
-    if (canvas) canvas.style.display = i === index ? "block" : "none";
+    const el = document.getElementById(id);
+    if (el) el.style.display = i === index ? "block" : "none";
   });
 }
 
@@ -357,15 +249,15 @@ function showPrevDashboard() {
   showDashboard(dashboardIndex);
 }
 
-
-document.addEventListener("input", () => {
-  const searchInput = document.getElementById("searchInput");
-  const filter = searchInput.value.toLowerCase();
+function filterComments() {
+  const filter = document.getElementById("searchInput").value.toLowerCase();
   const rows = document.querySelectorAll(".comments-table tbody tr");
-
   rows.forEach(row => {
-    const cells = row.querySelectorAll("td");
-    const match = [...cells].some(cell => cell.textContent.toLowerCase().includes(filter));
-    row.style.display = match ? "" : "none";
+    const visible = [...row.children].some(cell => cell.textContent.toLowerCase().includes(filter));
+    row.style.display = visible ? "" : "none";
   });
-});
+}
+
+function refreshComments() {
+  fetchComments();
+}
