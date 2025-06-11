@@ -3,43 +3,45 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Minhas Lives</title>
+  <title>Login | Minhas Lives</title>
   <link rel="stylesheet" href="../css/login.css">
 </head>
 
 <body>
   <div class="background-container"></div>
 
-  <div class="main-content">
-    <div class="logo-container">
+  <main class="main-content">
+    <section class="logo-container">
       <div class="logo">
         <img src="../img/login/Logo.svg" alt="Logo da empresa">
       </div>
-    </div>
-    <div class="login-container">
-      <div class="login">
+    </section>
+
+    <section class="login-container">
+      <form id="loginForm" class="login" novalidate>
         <div class="login-info-container">
           <div class="login-area-container">
             <div class="login-input-container">
-              <h5>Login</h5>
-              <input type="text" id="loginUsername">
+              <label for="loginUsername">Login</label>
+              <input type="text" id="loginUsername" name="username" required />
             </div>
             <div class="password-input-container">
-              <h5 id="senha">Senha</h5>
-              <input type="Password" id="loginPassword">
+              <label for="loginPassword">Senha</label>
+              <input type="password" id="loginPassword" name="password" required />
             </div>
           </div>
           <div class="entrar-container">
             <div class="entrar-cadastrar-container">
-              <button onclick="login()">ENTRAR</button>
+              <button type="submit" id="loginButton">ENTRAR</button>
+              <p id="loginError" style="color:red; font-size: 14px; display: none;"></p>
             </div>
           </div>
         </div>
-      </div>
-    </div>
-  </div>
-</body>
+      </form>
+    </section>
+  </main>
 
-<script src="../script/login.js"></script>
+  <script src="../script/login.js"></script>
+</body>
 
 </html>
