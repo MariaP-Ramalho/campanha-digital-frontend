@@ -102,6 +102,7 @@ header img {
     cursor: pointer;
     height: 75%;
     width: 13%;
+    min-width: 150px;
     border-radius: 12px;
     border: 0;
     background-color: #FFD500;
@@ -133,6 +134,7 @@ header img {
     margin: 10% auto;
     padding: 20px;
     width: 20%;
+    min-width: 350px;
     border-radius: 10px;
     position: relative;
 }
@@ -184,7 +186,8 @@ header img {
     font-weight: bold;
     cursor: pointer;
     border: 0;
-    background-color: #FAB400;;
+    background-color: #FAB400;
+    ;
 }
 
 .close:hover {
@@ -247,7 +250,6 @@ header img {
     border-radius: 16px;
     min-width: 320px;
     max-width: 340px;
-    padding: 16px;
     flex: 0 0 auto;
     color: white;
     font-family: 'SF Pro Display';
@@ -313,4 +315,159 @@ header img {
     font-size: 14px;
     color: #ccc;
     text-align: left;
+}
+
+@media (max-width: 600px) {
+
+    .reports-new h5 {
+        font-size: 20px;
+    }
+
+    .reports-new button {
+        width: 30px;
+        font-size: 14px;
+        min-width: 0;
+    }
+
+    .reports-header {
+        height: 6%;
+    }
+
+    header img {
+        height: 65%;
+    }
+
+    .tag-section h3 {
+        font-size: 9px;
+    }
+
+    .live-card {
+        min-width: 250px;
+        max-width: 270px;
+    }
+
+    .live-title {
+        font-size: 12px;
+    }
+
+    .live-actions button svg {
+        width: 15px;
+        height: 15px;
+    }
+
+    .live-date {
+        font-size: 10px;
+    }
+
+    .live-thumbnail {
+        height: 150px;
+    }
+
+    .modal-content {
+        width: 60%;
+    }
+
+    .modal-content input {
+        height: 30px;
+        font-size: 12px;
+        border-radius: 8px;
+    }
+
+    .modal-content label {
+        font-size: 14px;
+    }
+
+    .close {
+        font-size: 24px;
+    }
+
+    .modal-content select {
+        height: 30px;
+        border: 0;
+        border-radius: 8px;
+        font-family: 'SF Pro Display';
+        font-size: 12px;
+    }
+
+    #addTransmissaoBtn {
+        font-size: 12px;
+        height: 35px;
+    }
+
+}
+
+@media (min-width: 601px) and (max-width: 767px) {
+
+    header img {
+        height: 85%;
+    }
+
+    .reports-new h5 {
+        font-size: 25px;
+    }
+
+    .reports-new button {
+        width: 24%;
+        font-size: 10px;
+        border-radius: 7px;
+        min-width: 0;
+    }
+
+
+    .tag-section h3 {
+        font-size: 14px;
+    }
+
+    .live-card {
+        min-width: 300px;
+        max-width: 320px;
+    }
+
+    .live-title {
+        font-size: 15px;
+    }
+
+    .live-actions button svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    .live-date {
+        font-size: 12px;
+    }
+
+    .live-thumbnail {
+        height: 180px;
+    }
+
+    .modal-content {
+        width: 50%;
+    }
+
+    .modal-content input {
+        height: 35px;
+        font-size: 14px;
+        border-radius: 8px;
+    }
+
+    .modal-content label {
+        font-size: 16px;
+    }
+
+    .close {
+        font-size: 24px;
+    }
+
+    .modal-content select {
+        height: 35px;
+        border-radius: 8px;
+        font-size: 14px;
+    }
+
+    #addTransmissaoBtn {
+        font-size: 12px;
+        height: 40px;
+    }
+
+
 }

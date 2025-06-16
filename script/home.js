@@ -26,7 +26,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     loadTags();
     loadLives();
+    updateButtonText();
+
 });
+
+window.addEventListener("resize", updateButtonText);
 
 function closeModal() {
     const modal = document.getElementById("novaTransmissaoModal");
@@ -104,13 +108,13 @@ function createLiveCard(live) {
       <div class="live-title">[${tag}] ${live.title}</div>
       <div class="live-actions">
         <button title="Atualizar Tag" data-id="${live.liveId}" class="btn-update-tag">
-            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 22 22" fill="none" stroke="currentColor" 
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 22" fill="none" stroke="currentColor" 
             stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bookmark-icon lucide-bookmark">
             <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/>
             </svg>
         </button>
         <button title="Editar" data-id="${live.liveId}" data-title="${live.title}" class="btn-edit">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor"
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 22" fill="none" stroke="currentColor"
             stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
             class="lucide lucide-square-pen-icon lucide-square-pen">
             <path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>s
@@ -118,7 +122,7 @@ function createLiveCard(live) {
             </svg>
         </button>
         <button title="Apagar" data-id="${live.liveId}" class="btn-delete">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor"
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 22" fill="none" stroke="currentColor"
             stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
             class="lucide lucide-trash2-icon lucide-trash-2">
             <path d="M3 6h18"/>
@@ -235,4 +239,13 @@ function updateTag(liveId) {
             alert("Erro ao atualizar tag.");
         }
     });
+}
+
+function updateButtonText() {
+    const btn = document.getElementById("openModalBtn");
+    if (window.matchMedia("(max-width: 600px)").matches) {
+        btn.innerText = "+";
+    } else {
+        btn.innerText = "NOVA TRANSMISSÃO";
+    }
 }
