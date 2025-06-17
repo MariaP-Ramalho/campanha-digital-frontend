@@ -4,6 +4,8 @@ let analysisRunning = false;
 let sentimentChart = null;
 let timelineChart = null;
 let interactionChart = null;
+let currentLayout = window.innerWidth <= 768 ? "mobile" : "desktop";
+let resizeTimeout;
 
 const dashboards = ["timelineChart", "sentimentChart", "interactionChart"];
 let dashboardIndex = 0;
@@ -25,6 +27,18 @@ document.addEventListener("DOMContentLoaded", () => {
   checkLiveStatus();
   fetchComments();
 });
+
+window.addEventListener("resize", () => {
+  clearTimeout(resizeTimeout);
+  resizeTimeout = setTimeout(() => {
+    const newLayout = window.innerWidth <= 768 ? "mobile" : "desktop";
+    if (newLayout !== currentLayout) {
+      currentLayout = newLayout;
+      fetchComments();
+    }
+  }, 300);
+})
+
 
 function getLiveIdFromURL() {
   return new URLSearchParams(window.location.search).get("liveId");
@@ -131,18 +145,46 @@ function renderCommentsTable(comments) {
   tbody.innerHTML = "";
   comments.forEach(c => {
     const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td class="col-horario">${formatTime(c.commentsDetailsData?.commentTimeStamp)}</td>
-      <td class="col-autor">
-        <a href="${c.authorDetailsData?.channelUrl}" target="_blank" class="author-link">
-          <img src="${c.authorDetailsData?.userProfileImageUrl}" class="author-avatar">
-          <span>${c.authorDetailsData?.userDisplayName || "?"}</span>
-        </a>
-      </td>
-      <td class="col-comentario">${c.commentsDetailsData?.commentContent || ""}</td>
-      <td class="col-class">${c.sentiment || "-"}</td>
-      <td class="col-interacao">${c.interaction || "-"}</td>
-    `;
+
+    if (currentLayout === "mobile") {
+      tr.innerHTML = `
+    <td colspan="5">
+      <div class="comment-card">
+        <div class="comment-top">
+          <div class="comment-author">
+            <img src="${c.authorDetailsData?.userProfileImageUrl}" class="author-avatar">
+            <span>${c.authorDetailsData?.userDisplayName || "?"}</span>
+          </div>
+          <span class="comment-time">${formatTime(c.commentsDetailsData?.commentTimeStamp)}</span>
+        </div>
+
+        <div class="comment-body">
+          ${c.commentsDetailsData?.commentContent || ""}
+        </div>
+
+        <div class="comment-bottom">
+          <span class="comment-interaction">${c.interaction || "-"}</span>
+          <span class="comment-sentiment">${c.sentiment || "-"}</span>
+        </div>
+      </div>
+    </td>
+  `;
+      tr.classList.add("comment-row");
+    } else {
+      tr.innerHTML = `
+    <td class="col-horario">${formatTime(c.commentsDetailsData?.commentTimeStamp)}</td>
+    <td class="col-autor">
+      <div class="comment-author">
+        <img src="${c.authorDetailsData?.userProfileImageUrl}" class="author-avatar">
+        <span>${c.authorDetailsData?.userDisplayName || "?"}</span>
+      </div>
+    </td>
+    <td class="col-comentario">${c.commentsDetailsData?.commentContent || ""}</td>
+    <td class="col-class">${c.sentiment || "-"}</td>
+    <td class="col-interacao">${c.interaction || "-"}</td>
+  `;
+    }
+
     tbody.appendChild(tr);
   });
   document.getElementById("commentCount").textContent = comments.length;
