@@ -320,6 +320,9 @@ header img {
 
 @media (max-width: 600px) {
 
+    .reports{
+        width: 90%;
+    }
     .reports-new h5 {
         font-size: 20px;
     }
@@ -403,6 +406,10 @@ header img {
         height: 85%;
     }
 
+    .reports{
+        width: 90%;
+    }
+    
     .reports-new h5 {
         font-size: 25px;
     }

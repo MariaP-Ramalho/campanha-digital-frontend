@@ -4,7 +4,7 @@ let analysisRunning = false;
 let sentimentChart = null;
 let timelineChart = null;
 let interactionChart = null;
-let currentLayout = window.innerWidth <= 768 ? "mobile" : "desktop";
+let currentLayout = window.innerWidth <= 992 ? "mobile" : "desktop";
 let resizeTimeout;
 
 const dashboards = ["timelineChart", "sentimentChart", "interactionChart"];
