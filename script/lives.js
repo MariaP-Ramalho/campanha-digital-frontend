@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
 window.addEventListener("resize", () => {
   clearTimeout(resizeTimeout);
   resizeTimeout = setTimeout(() => {
-    const newLayout = window.innerWidth <= 768 ? "mobile" : "desktop";
+    const newLayout = window.innerWidth <= 991 ? "mobile" : "desktop";
     if (newLayout !== currentLayout) {
       currentLayout = newLayout;
       fetchComments();
@@ -163,8 +163,8 @@ function renderCommentsTable(comments) {
         </div>
 
         <div class="comment-bottom">
-          <span class="comment-interaction">${c.interaction || "-"}</span>
-          <span class="comment-sentiment">${c.sentiment || "-"}</span>
+          <span class="comment-interaction">${formatEnumLabel(c.sentiment) || "-"}</span>
+          <span class="comment-sentiment">${formatEnumLabel(c.sentiment) || "-"}</span>
         </div>
       </div>
     </td>
@@ -180,8 +180,8 @@ function renderCommentsTable(comments) {
       </div>
     </td>
     <td class="col-comentario">${c.commentsDetailsData?.commentContent || ""}</td>
-    <td class="col-class">${c.sentiment || "-"}</td>
-    <td class="col-interacao">${c.interaction || "-"}</td>
+    <td class="col-class">${formatEnumLabel(c.sentiment) || "-"}</td>
+    <td class="col-interacao">${formatEnumLabel(c.interaction) || "-"}</td>
   `;
     }
 
@@ -209,7 +209,7 @@ function buildSentimentChart(comments) {
 
   const ctx = document.getElementById("sentimentChart").getContext("2d");
   const data = {
-    labels: Object.keys(counts),
+    labels: Object.keys(counts).map(formatEnumLabel),
     datasets: [{
       data: Object.values(counts),
       backgroundColor: ["#FFEB8A", "#F57C1F", "#F59A55"],
@@ -235,7 +235,7 @@ function buildSentimentChart(comments) {
 }
 
 function buildTimelineChart(comments) {
-  const buckets = {}; // total
+  const buckets = {};
   const positives = {};
   const negatives = {};
   const neutrals = {};
@@ -345,7 +345,7 @@ function buildInteractionChart(comments) {
   });
 
   const ctx = document.getElementById("interactionChart").getContext("2d");
-  const labels = Object.keys(types);
+  const labels = Object.keys(types).map(formatEnumLabel);
   const values = Object.values(types);
 
   if (interactionChart) {
@@ -403,3 +403,13 @@ function filterComments() {
 function refreshComments() {
   fetchComments();
 }
+
+function formatEnumLabel(enumValue) {
+  if (!enumValue) return "-";
+  return enumValue
+    .toLowerCase()
+    .split('_')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+}
+

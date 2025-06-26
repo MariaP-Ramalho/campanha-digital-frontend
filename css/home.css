@@ -37,7 +37,6 @@ body {
 }
 
 header {
-    /* background-color: aqua; */
     width: 100%;
     height: 6%;
     display: flex;
@@ -48,6 +47,7 @@ header {
 
 header img {
     height: 100%;
+    min-height: 40px;
     width: auto;
     display: block;
     margin: 0 auto;
@@ -56,7 +56,6 @@ header img {
 .main-content {
     width: 100%;
     height: 100%;
-    /* background-color: yellow; */
     z-index: 1;
     margin-top: 2%;
     display: flex;
@@ -65,16 +64,14 @@ header img {
 }
 
 .reports {
-    /* background-color: blue; */
     width: 80%;
     height: 100%;
 }
 
 .reports-header {
-    /* background-color: blueviolet; */
-    height: 10%;
+    height: 15%;
     width: 100%;
-
+    min-height: 60px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -339,6 +336,7 @@ header img {
 
     header img {
         height: 65%;
+        min-height: 20px;
     }
 
     .tag-section h3 {
@@ -404,6 +402,7 @@ header img {
 
     header img {
         height: 85%;
+        min-height: 20px;
     }
 
     .reports{

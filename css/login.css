@@ -118,10 +118,11 @@ input:focus {
 .login-area-container input {
   width: 100%;
   height: 48%;
-  border-radius: 13px;
+  border-radius: 10px;
   padding: 0;
   border: 0;
   font-size: 16px;
+  min-height: 30px;
 }
 
 .login-input-container,
@@ -151,9 +152,10 @@ input:focus {
   cursor: pointer;
   width: 90%;
   height: 50%;
-  border-radius: 16px;
+  min-height: 45px;
+  border-radius: 12px;
   font-family: 'SF Pro Display', sans-serif;
-  font-size: 19px;
+  font-size: 15px;
   font-weight: bolder;
   background-color: #FFD500;
   border: 0;
@@ -174,15 +176,15 @@ input:focus {
   }
 
   .entrar-cadastrar-container button {
-    width: 90%;
+    width: 70%;
     height: 50%;
-    border-radius: 16px;
+    border-radius: 12px;
     font-size: 15px;
 
   }
 
   .logo {
-    width: 40%;
+    width: 30%;
   }
 
 }
