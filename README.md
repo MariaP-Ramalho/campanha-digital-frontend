@@ -7,13 +7,13 @@ Bem-vindo à **Campanha Digital**! 😎
 1. **Crie um servidor web local** 
 
    ```bash
-   python -m http.server
+   python -m http.server 5500
    ```
 
 2. **Agora, é só abrir o seu navegador e acessar:** 
 
     ```bash
-    http://[::1]:8000/html/login.html
+    http://localhost:5500/html/login.html
     ```
 
 A página vai recarregar automaticamente quando fizer mudanças. 
