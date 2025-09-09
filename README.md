@@ -27,4 +27,4 @@ Quando você rodar o BackEnd, você deverá criar um usuário através do Swagge
 ## BackEnd
 
 Você pode conferir o código do backend aqui:
-https://github.com/live-insights/back-end
+https://github.com/MariaP-Ramalho/campanha-digital-backend
